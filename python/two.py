@@ -1,10 +1,38 @@
 from socket import *
+import threading
+import time
+
+lock = threading.Lock()
+
+def send(sock):
+    while True:
+        sendData = input('>>>')
+        sock.send(sendData.encode('utf-8'))
+
+def receive(sock):
+    while True:
+        recvData = sock.recv(1024)
+        print('상대방 :', recvData.decode('utf-8'))
+
+
+
+port = 8081
 
 clientSock = socket(AF_INET, SOCK_STREAM)
-clientSock.connect(('127.0.0.1', 8080))
+clientSock.connect(('127.0.0.1', port))
 
-msg = clientSock.recv(1024)
-print(msg.decode('utf-8'))
+print('접속 완료')
 
-msg = '안녕'
-clientSock.send(msg.encode('utf-8'))
+
+sender = threading.Thread(target=send, args=(clientSock,))
+receiver = threading.Thread(target=receive, args=(clientSock,))
+
+
+sender.start()
+receiver.start()
+
+while True:
+    lock.acquire()
+    time.sleep(1)
+    lock.release()
+    pass
