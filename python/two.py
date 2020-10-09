@@ -12,7 +12,7 @@ def send(sock):
 def receive(sock):
     while True:
         recvData = sock.recv(1024)
-        print('상대방 :', recvData.decode('utf-8'))
+        print(recvData.decode('utf-8'))
 
 
 
@@ -21,7 +21,7 @@ port = 8081
 clientSock = socket(AF_INET, SOCK_STREAM)
 clientSock.connect(('127.0.0.1', port))
 
-print('접속 완료')
+print('접속 완료. ')
 
 
 sender = threading.Thread(target=send, args=(clientSock,))
